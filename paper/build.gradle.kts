@@ -1,9 +1,11 @@
 plugins {
     java
     `java-library`
+    `maven-publish`
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
+group = "fr.codinbox.redisconnector"
 version = "1.0.0-SNAPSHOT"
 
 repositories {
@@ -53,5 +55,22 @@ tasks.processResources.configure {
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
         expand(props)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
+    repositories {
+        maven("https://nexus.codinbox.fr/repository/maven-releases/") {
+            name = "public-releases"
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
     }
 }
