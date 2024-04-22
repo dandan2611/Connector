@@ -16,7 +16,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
 
-    implementation(project(":commons"))
+    api(project(":commons"))
 }
 
 val targetJavaVersion = JavaVersion.VERSION_17
