@@ -13,8 +13,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains:annotations:24.1.0")
-    implementation("org.redisson:redisson:3.28.0")
+    api("org.jetbrains:annotations:24.1.0")
+    api("org.redisson:redisson:3.28.0")
 }
 
 java {
