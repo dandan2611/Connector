@@ -13,9 +13,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.logging.Logger;
 
 @Plugin(
-        id = "proxy",
-        name = "proxy",
-        version = "3.0.0"
+        id = "redisconnector",
+        name = "redisconnector",
+        version = "4.0.0"
 )
 public class RedisConnectorPlugin {
 
