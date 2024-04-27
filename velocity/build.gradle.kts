@@ -14,9 +14,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
-
     api(project(":commons"))
+    compileOnly("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
+    annotationProcessor("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
 }
 
 val targetJavaVersion = JavaVersion.VERSION_17
@@ -57,11 +57,6 @@ tasks.processResources.configure {
     filesMatching("plugin.yml") {
         expand(props)
     }
-}
-
-java {
-    withSourcesJar()
-    withJavadocJar()
 }
 
 publishing {
