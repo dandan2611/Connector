@@ -15,29 +15,27 @@ import java.util.logging.Logger;
 @Plugin(
         id = "redisconnector",
         name = "redisconnector",
-        version = "4.0.0"
+        version = "4.0.1"
 )
 public class RedisConnectorPlugin {
 
-    @Inject
-    private Logger logger;
+    private final @NotNull Logger logger;
+    private final @NotNull ProxyServer server;
 
-    @Inject
-    private ProxyServer server;
+    public @Inject RedisConnectorPlugin(final @NotNull Logger logger, final @NotNull ProxyServer server) {
+        this.logger = logger;
+        this.server = server;
 
-    @Subscribe
-    private void onProxyInit(final @NotNull ProxyInitializeEvent event) {
         final var serviceImpl = new RedisConnectorServiceImpl(this.logger);
 
         try {
             serviceImpl.init();
+            RedisConnector.setService(serviceImpl);
         } catch (ConnectionInitException exception) {
             this.logger.severe("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
             this.server.shutdown();
             return;
         }
-
-        RedisConnector.setService(serviceImpl);
     }
 
     @Subscribe
