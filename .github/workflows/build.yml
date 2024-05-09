@@ -20,3 +20,8 @@ jobs:
         with:
           name: Plugin-jars
           path: paper/build/libs/RedisConnector-*-all.jar
+      - name: Upload Velocity artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Plugin-jars
+          path: velocity/build/libs/RedisConnector-*-all.jar
