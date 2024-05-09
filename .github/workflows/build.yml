@@ -18,10 +18,10 @@ jobs:
       - name: Upload Paper artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Plugin-jars
+          name: Paper-jars
           path: paper/build/libs/RedisConnector-*-all.jar
       - name: Upload Velocity artifact
         uses: actions/upload-artifact@v3
         with:
-          name: Plugin-jars
+          name: Velocity-jars
           path: velocity/build/libs/RedisConnector-*-all.jar
