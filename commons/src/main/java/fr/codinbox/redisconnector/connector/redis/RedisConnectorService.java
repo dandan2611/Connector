@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.connector;
+package fr.codinbox.redisconnector.connector.redis;
 
 import org.jetbrains.annotations.NotNull;
 import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;

@@ -1,6 +1,6 @@
 package fr.codinbox.redisconnector;
 
-import fr.codinbox.redisconnector.connector.RedisConnectorService;
+import fr.codinbox.redisconnector.connector.redis.RedisConnectorService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

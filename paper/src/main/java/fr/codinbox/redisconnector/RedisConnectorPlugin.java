@@ -1,9 +1,9 @@
 package fr.codinbox.redisconnector;
 
-import fr.codinbox.redisconnector.connector.RedisConnectorService;
+import fr.codinbox.redisconnector.connector.redis.RedisConnectorService;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import fr.codinbox.redisconnector.connector.RedisConnectorServiceImpl;
+import fr.codinbox.redisconnector.connector.redis.RedisConnectorServiceImpl;
 import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
 
 public class RedisConnectorPlugin extends JavaPlugin {

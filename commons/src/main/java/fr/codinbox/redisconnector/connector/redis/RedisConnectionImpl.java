@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.connector;
+package fr.codinbox.redisconnector.connector.redis;
 
 import fr.codinbox.redisconnector.utils.EnvUtils;
 import fr.codinbox.redisconnector.utils.FileUtils;
