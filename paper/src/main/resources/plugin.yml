@@ -1,7 +1,7 @@
-name: RedisConnector
+name: Connector
 version: "${version}"
 api-version: "1.20"
 author: dandan2611
 
 load: STARTUP
-main: fr.codinbox.redisconnector.RedisConnectorPlugin
+main: fr.codinbox.redisconnector.ConnectorPlugin

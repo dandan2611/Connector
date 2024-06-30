@@ -1,5 +1,7 @@
 package fr.codinbox.redisconnector.connector.redis;
 
+import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
+import fr.codinbox.redisconnector.utils.ConnectionType;
 import fr.codinbox.redisconnector.utils.EnvUtils;
 import fr.codinbox.redisconnector.utils.FileUtils;
 import org.jetbrains.annotations.NotNull;
@@ -7,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
 
 import java.io.File;
 import java.util.Objects;
@@ -69,7 +70,7 @@ public class RedisConnectionImpl implements RedisConnection {
 
     @Override
     public boolean isExitOnFailure() {
-        return EnvUtils.isExitOnFailure(this.id);
+        return EnvUtils.isExitOnFailure(ConnectionType.REDIS, this.id);
     }
 
 }

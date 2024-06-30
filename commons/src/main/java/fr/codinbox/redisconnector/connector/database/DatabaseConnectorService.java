@@ -1,11 +1,11 @@
-package fr.codinbox.redisconnector.connector.redis;
+package fr.codinbox.redisconnector.connector.database;
 
 import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public interface RedisConnectorService {
+public interface DatabaseConnectorService {
 
     void init() throws ConnectionInitException;
 
@@ -20,6 +20,6 @@ public interface RedisConnectorService {
      * @param id the id of the connection
      * @return the connection
      */
-    @NotNull Optional<RedisConnection> getConnection(final @NotNull String id);
+    @NotNull Optional<DatabaseConnection> getConnection(final @NotNull String id);
 
 }

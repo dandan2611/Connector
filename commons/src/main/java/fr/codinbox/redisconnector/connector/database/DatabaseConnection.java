@@ -1,12 +1,13 @@
-package fr.codinbox.redisconnector.connector.redis;
+package fr.codinbox.redisconnector.connector.database;
 
 import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
 import org.jetbrains.annotations.NotNull;
-import org.redisson.api.RedissonClient;
 
-public interface RedisConnection {
+import java.sql.Connection;
 
-    @NotNull RedissonClient getClient();
+public interface DatabaseConnection {
+
+    @NotNull Connection getConnection();
 
     void init() throws ConnectionInitException;
 

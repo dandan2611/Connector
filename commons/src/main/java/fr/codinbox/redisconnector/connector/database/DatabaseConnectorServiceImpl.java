@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.connector.redis;
+package fr.codinbox.redisconnector.connector.database;
 
 import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
 import fr.codinbox.redisconnector.utils.ConnectionType;
@@ -12,22 +12,22 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RedisConnectorServiceImpl implements RedisConnectorService {
+public class DatabaseConnectorServiceImpl implements DatabaseConnectorService {
 
-    private static final @NotNull ConnectionType CONNECTION_TYPE = ConnectionType.REDIS;
+    private static final @NotNull ConnectionType CONNECTION_TYPE = ConnectionType.DATABASE;
 
     private final @NotNull Logger logger;
 
-    private final @NotNull Map<String, RedisConnection> redisConnectionMap;
+    private final @NotNull Map<String, DatabaseConnection> sqlConnectionMap;
 
-    public RedisConnectorServiceImpl(final @NotNull Logger logger) {
+    public DatabaseConnectorServiceImpl(final @NotNull Logger logger) {
         this.logger = logger;
-        this.redisConnectionMap = new HashMap<>();
+        this.sqlConnectionMap = new HashMap<>();
     }
 
     @Override
     public void init() throws ConnectionInitException {
-        // Connect to redis servers
+        // Connect to db servers
         final var idList = EnvUtils.getEnvironmentIds(CONNECTION_TYPE);
         this.logger.info(String.format("%d connection(s) to initialize", idList.size()));
         for (String id : idList) {
@@ -43,9 +43,9 @@ public class RedisConnectorServiceImpl implements RedisConnectorService {
 
             try {
                 this.logger.info(id + ": Creating connection object");
-                final var connection = new RedisConnectionImpl(this.logger, id, configFilepath);
+                final var connection = new DatabaseConnectionImpl(this.logger, id, configFilepath);
                 connection.init();
-                this.redisConnectionMap.put(id, connection);
+                this.sqlConnectionMap.put(id, connection);
             } catch (Exception exception) {
                 logger.log(Level.SEVERE, "Failed to create connection for id: " + id, exception);
                 if (EnvUtils.isExitOnFailure(CONNECTION_TYPE, id)) {
@@ -57,13 +57,13 @@ public class RedisConnectorServiceImpl implements RedisConnectorService {
 
     @Override
     public void shutdown() {
-        for (RedisConnection value : this.redisConnectionMap.values())
+        for (DatabaseConnection value : this.sqlConnectionMap.values())
             value.shutdown();
     }
 
     @Override
-    public @NotNull Optional<RedisConnection> getConnection(@NotNull String id) {
-        return Optional.ofNullable(this.redisConnectionMap.get(id));
+    public @NotNull Optional<DatabaseConnection> getConnection(@NotNull String id) {
+        return Optional.ofNullable(this.sqlConnectionMap.get(id));
     }
 
 }

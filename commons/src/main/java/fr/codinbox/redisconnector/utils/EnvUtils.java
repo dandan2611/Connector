@@ -9,12 +9,12 @@ import java.util.List;
 public final class EnvUtils {
 
     public static final @NotNull String REDIS_PREFIX = "CONNECTOR_REDIS_";
-    public static final @NotNull String MYSQL_PREFIX = "CONNECTOR_MYSQL_";
+    public static final @NotNull String MYSQL_PREFIX = "CONNECTOR_DB_";
 
     public static @NotNull String getPrefix(final @NotNull ConnectionType connectionType) {
         return switch (connectionType) {
             case REDIS -> REDIS_PREFIX;
-            case MYSQL -> MYSQL_PREFIX;
+            case DATABASE -> MYSQL_PREFIX;
         };
     }
 
@@ -22,7 +22,7 @@ public final class EnvUtils {
         return REDIS_PREFIX + id.toUpperCase() + "_";
     }
 
-    private static @NotNull String getMysqlConnectionPrefix(final @NotNull String id) {
+    private static @NotNull String getDatabaseConnectionPrefix(final @NotNull String id) {
         return MYSQL_PREFIX + id.toUpperCase() + "_";
     }
 
@@ -30,7 +30,7 @@ public final class EnvUtils {
                                                        final @NotNull String id) {
         return switch (connectionType) {
             case REDIS -> getRedisConnectionPrefix(id);
-            case MYSQL -> getMysqlConnectionPrefix(id);
+            case DATABASE -> getDatabaseConnectionPrefix(id);
         };
     }
 

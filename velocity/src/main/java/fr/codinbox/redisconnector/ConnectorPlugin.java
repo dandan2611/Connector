@@ -1,0 +1,58 @@
+package fr.codinbox.redisconnector;
+
+import com.google.inject.Inject;
+import com.velocitypowered.api.event.Subscribe;
+import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
+import com.velocitypowered.api.plugin.Plugin;
+import com.velocitypowered.api.proxy.ProxyServer;
+import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
+import fr.codinbox.redisconnector.connector.redis.RedisConnectorServiceImpl;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.logging.Logger;
+
+@Plugin(
+        id = "connector",
+        name = "connector",
+        version = "4.0.1",
+        authors = {"dandan2611"}
+)
+public class ConnectorPlugin {
+
+    private final @NotNull Logger logger;
+    private final @NotNull ProxyServer server;
+
+    public @Inject ConnectorPlugin(final @NotNull Logger logger, final @NotNull ProxyServer server) {
+        this.logger = logger;
+        this.server = server;
+
+        final var databaseServiceImpl = new RedisConnectorServiceImpl(this.logger);
+
+        try {
+            databaseServiceImpl.init();
+            Connector.setRedisService(databaseServiceImpl);
+        } catch (ConnectionInitException exception) {
+            this.logger.severe("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.server.shutdown();
+            return;
+        }
+
+        final var redisServiceImpl = new RedisConnectorServiceImpl(this.logger);
+
+        try {
+            redisServiceImpl.init();
+            Connector.setRedisService(redisServiceImpl);
+        } catch (ConnectionInitException exception) {
+            this.logger.severe("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.server.shutdown();
+            return;
+        }
+    }
+
+    @Subscribe
+    private void onProxyShutdown(final @NotNull ProxyShutdownEvent event) {
+        Connector.getDatabaseService().shutdown();
+        Connector.getRedisService().shutdown();
+    }
+
+}
