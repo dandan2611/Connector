@@ -1,10 +1,10 @@
-package fr.codinbox.redisconnector.connector.database;
+package fr.codinbox.connector.commons.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
-import fr.codinbox.redisconnector.utils.ConnectionType;
-import fr.codinbox.redisconnector.utils.EnvUtils;
+import fr.codinbox.connector.commons.utils.ConnectionType;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.utils.EnvUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

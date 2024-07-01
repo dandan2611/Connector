@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.connector.exception;
+package fr.codinbox.connector.commons.exception;
 
 public class ConnectionInitException extends Exception {
 

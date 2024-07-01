@@ -1,7 +1,7 @@
-package fr.codinbox.redisconnector;
+package fr.codinbox.connector.velocity;
 
-import fr.codinbox.redisconnector.connector.database.DatabaseConnectorService;
-import fr.codinbox.redisconnector.connector.redis.RedisConnectorService;
+import fr.codinbox.connector.commons.database.DatabaseConnectorService;
+import fr.codinbox.connector.commons.redis.RedisConnectorService;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

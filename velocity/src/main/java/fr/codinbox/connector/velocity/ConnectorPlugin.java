@@ -1,12 +1,12 @@
-package fr.codinbox.redisconnector;
+package fr.codinbox.connector.velocity;
 
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
-import fr.codinbox.redisconnector.connector.redis.RedisConnectorServiceImpl;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.redis.RedisConnectorServiceImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.logging.Logger;

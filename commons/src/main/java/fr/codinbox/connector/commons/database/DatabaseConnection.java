@@ -1,6 +1,6 @@
-package fr.codinbox.redisconnector.connector.database;
+package fr.codinbox.connector.commons.database;
 
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;

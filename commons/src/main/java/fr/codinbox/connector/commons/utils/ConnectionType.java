@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.utils;
+package fr.codinbox.connector.commons.utils;
 
 public enum ConnectionType {
     REDIS,

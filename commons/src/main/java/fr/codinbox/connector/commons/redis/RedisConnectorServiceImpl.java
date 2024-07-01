@@ -1,8 +1,8 @@
-package fr.codinbox.redisconnector.connector.redis;
+package fr.codinbox.connector.commons.redis;
 
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
-import fr.codinbox.redisconnector.utils.ConnectionType;
-import fr.codinbox.redisconnector.utils.EnvUtils;
+import fr.codinbox.connector.commons.utils.ConnectionType;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.utils.EnvUtils;
 import org.jetbrains.annotations.NotNull;
 import org.redisson.client.RedisConnectionException;
 

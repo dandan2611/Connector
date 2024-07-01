@@ -1,6 +1,6 @@
-package fr.codinbox.redisconnector.connector.redis;
+package fr.codinbox.connector.commons.redis;
 
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
 import org.jetbrains.annotations.NotNull;
 import org.redisson.api.RedissonClient;
 

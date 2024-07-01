@@ -1,10 +1,10 @@
-package fr.codinbox.redisconnector;
+package fr.codinbox.connector.paper;
 
-import fr.codinbox.redisconnector.connector.database.DatabaseConnectorService;
-import fr.codinbox.redisconnector.connector.database.DatabaseConnectorServiceImpl;
-import fr.codinbox.redisconnector.connector.exception.ConnectionInitException;
-import fr.codinbox.redisconnector.connector.redis.RedisConnectorService;
-import fr.codinbox.redisconnector.connector.redis.RedisConnectorServiceImpl;
+import fr.codinbox.connector.commons.database.DatabaseConnectorService;
+import fr.codinbox.connector.commons.database.DatabaseConnectorServiceImpl;
+import fr.codinbox.connector.commons.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.redis.RedisConnectorService;
+import fr.codinbox.connector.commons.redis.RedisConnectorServiceImpl;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 

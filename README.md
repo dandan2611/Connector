@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    implementation("fr.codinbox.redisconnector:paper:version")
-    implementation("fr.codinbox.redisconnector:velocity:version")
+    implementation("fr.codinbox.connector:paper:version")
+    implementation("fr.codinbox.connector:velocity:version")
 }
 ```
 

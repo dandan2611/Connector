@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.codec;
+package fr.codinbox.connector.commons.codec;
 
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;

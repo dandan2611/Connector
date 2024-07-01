@@ -1,4 +1,4 @@
-package fr.codinbox.redisconnector.utils;
+package fr.codinbox.connector.commons.utils;
 
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.NotNull;
