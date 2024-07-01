@@ -5,7 +5,7 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 
-group = "fr.codinbox.redisconnector"
+group = "fr.codinbox.connector"
 version = "5.0.1"
 
 repositories {
