@@ -1,4 +1,4 @@
-# Conector
+# Connector
 
 Easily centralize connections to databases and Redis in your server, and access them through a blazingly simple api.
 
@@ -6,7 +6,18 @@ Easily centralize connections to databases and Redis in your server, and access 
 
 ## Installation
 
-SOON
+Download latest release from [here](https://nexus.codinbox.fr/#browse/browse:maven-public:fr%2Fcodinbox%2Fredisconnector) corresponding to your platform
+
+```Kotlin
+repositories {
+    maven("https://nexus.codinbox.fr/repository/maven-public")
+}
+
+dependencies {
+    implementation("fr.codinbox.redisconnector:paper:version")
+    implementation("fr.codinbox.redisconnector:velocity:version")
+}
+```
 
 ## Config
 
