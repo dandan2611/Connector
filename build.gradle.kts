@@ -11,7 +11,7 @@ repositories {
 dependencies {}
 
 group = "fr.codinbox.redisconnector"
-version = "4.0.1"
+version = "5.0.1"
 
 val targetJavaVersion = JavaVersion.VERSION_17
 java {

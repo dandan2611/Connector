@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.redisconnector"
-version = "4.0.1"
+version = "5.0.1"
 
 repositories {
     mavenCentral()
