@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "5.0.1"
+version = "6.0.0"
 
 repositories {
     mavenCentral()
