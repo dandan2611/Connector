@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "6.0.0"
+version = "6.0.1"
 
 repositories {
     mavenCentral()
@@ -37,11 +37,11 @@ tasks.withType(JavaCompile::class).configureEach {
 }
 
 tasks.shadowJar {
-    archiveBaseName.set("RedisConnector")
+    archiveBaseName.set("connector-velocity")
 }
 
 tasks.jar {
-    archiveBaseName.set("RedisConnector")
+    archiveBaseName.set("connector-velocity")
 }
 
 tasks.build {
