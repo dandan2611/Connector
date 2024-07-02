@@ -49,7 +49,7 @@ Connector can be configured using the following environment variables:
 Example simple configuration file:
 
 ```yaml
-codec: !<org.redisson.codec.JsonJacksonCodec> {}
+codec: !<fr.codinbox.connector.commons.codec.JsonJacksonConnectorCodec> {}
 singleServerConfig:
   address: "redis://127.0.0.1:6379"
   connectTimeout: 5000
