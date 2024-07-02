@@ -19,13 +19,13 @@ import java.util.logging.Logger;
 )
 public class ConnectorPlugin {
 
-    private final @NotNull Logger logger;
-    private final @NotNull ProxyServer server;
+    @Inject
+    private Logger logger;
 
-    public @Inject ConnectorPlugin(final @NotNull Logger logger, final @NotNull ProxyServer server) {
-        this.logger = logger;
-        this.server = server;
+    @Inject
+    private ProxyServer server;
 
+    public ConnectorPlugin() {
         final var databaseServiceImpl = new RedisConnectorServiceImpl(this.logger);
 
         try {

@@ -57,7 +57,13 @@ public final class EnvUtils {
         return System.getenv().keySet().stream()
                 .filter(key -> key.startsWith(prefix))
                 .map(key -> key.substring(prefix.length()))
-                .map(key -> key.substring(0, key.indexOf('_')))
+                .map(key -> {
+                    int index = key.indexOf('_');
+                    if (index == -1) {
+                        throw new IllegalArgumentException("Invalid echo environment. Did you specify the connection name?");
+                    }
+                    return key.substring(0, key.indexOf('_'));
+                })
                 .distinct()
                 .toList();
     }
