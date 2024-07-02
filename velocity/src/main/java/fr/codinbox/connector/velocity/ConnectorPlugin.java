@@ -1,15 +1,16 @@
 package fr.codinbox.connector.velocity;
 
 import com.google.inject.Inject;
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyShutdownEvent;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import fr.codinbox.connector.commons.database.DatabaseConnectorServiceImpl;
 import fr.codinbox.connector.commons.exception.ConnectionInitException;
 import fr.codinbox.connector.commons.redis.RedisConnectorServiceImpl;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.logging.Logger;
+import org.slf4j.Logger;
 
 @Plugin(
         id = "connector",
@@ -26,30 +27,32 @@ public class ConnectorPlugin {
     private ProxyServer server;
 
     public ConnectorPlugin() {
-        final var databaseServiceImpl = new RedisConnectorServiceImpl(this.logger);
+        final java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger("connector");
+
+        final var databaseServiceImpl = new DatabaseConnectorServiceImpl(javaLogger);
 
         try {
             databaseServiceImpl.init();
-            Connector.setRedisService(databaseServiceImpl);
+            Connector.setDatabaseService(databaseServiceImpl);
         } catch (ConnectionInitException exception) {
-            this.logger.severe("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.logger.error("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
             this.server.shutdown();
             return;
         }
 
-        final var redisServiceImpl = new RedisConnectorServiceImpl(this.logger);
+        final var redisServiceImpl = new RedisConnectorServiceImpl(javaLogger);
 
         try {
             redisServiceImpl.init();
             Connector.setRedisService(redisServiceImpl);
         } catch (ConnectionInitException exception) {
-            this.logger.severe("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.logger.error("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
             this.server.shutdown();
             return;
         }
     }
 
-    @Subscribe
+    @Subscribe(order = PostOrder.LAST)
     private void onProxyShutdown(final @NotNull ProxyShutdownEvent event) {
         Connector.getDatabaseService().shutdown();
         Connector.getRedisService().shutdown();
