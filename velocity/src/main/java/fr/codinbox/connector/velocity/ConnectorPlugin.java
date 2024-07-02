@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "connector",
         name = "connector",
-        version = "6.0.1",
+        version = "6.0.2",
         authors = {"dandan2611"}
 )
 public class ConnectorPlugin {
