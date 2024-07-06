@@ -31,11 +31,10 @@ Connector connects to databases using HikariCP. Connector can be configured usin
 Example simple configuration file:
 
 ```properties
-dataSourceClassName=org.mariadb.jdbc.Driver
-dataSource.serverName=127.0.0.1
-dataSource.portNumber=3306
-dataSource.user=user
-dataSource.password=password
+driverClassName=org.mariadb.jdbc.Driver
+jdbcUrl=jdbc:mariadb://IP:PORT/yourdb
+dataSource.user=youruserhere
+dataSource.password=hypersecretpassword
 dataSource.databaseName=superduperdatabase
 ```
 
