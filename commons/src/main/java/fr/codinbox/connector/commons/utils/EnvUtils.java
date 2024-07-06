@@ -47,7 +47,7 @@ public final class EnvUtils {
     @CheckReturnValue
     public static String getConfigFilepath(final @NotNull ConnectionType connectionType,
                                            final @NotNull String id) {
-        return System.getenv(getRedisConnectionPrefix(id) + "CONFIG");
+        return System.getenv(getConnectionPrefix(connectionType, id) + "CONFIG");
     }
 
     @CheckReturnValue

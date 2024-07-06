@@ -20,6 +20,7 @@ dependencies {
 
     // MySql
     api("com.zaxxer:HikariCP:5.1.0")
+    implementation("org.mariadb.jdbc:mariadb-java-client:3.4.0")
 
     // Json
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0")

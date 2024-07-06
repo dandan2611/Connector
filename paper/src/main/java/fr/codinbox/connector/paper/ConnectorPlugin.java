@@ -49,12 +49,17 @@ public class ConnectorPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        final var service = super.getServer().getServicesManager().load(RedisConnectorService.class);
-
-        if (service != null) {
-            service.shutdown();
-            super.getServer().getServicesManager().unregisterAll(this);
+        final var redisService = super.getServer().getServicesManager().load(RedisConnectorService.class);
+        if (redisService != null) {
+            redisService.shutdown();
         }
+
+        final var databaseService = super.getServer().getServicesManager().load(DatabaseConnectorService.class);
+        if (databaseService != null) {
+            databaseService.shutdown();
+        }
+
+        super.getServer().getServicesManager().unregisterAll(this);
     }
 
 }

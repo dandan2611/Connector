@@ -28,6 +28,12 @@ public class DatabaseConnectorServiceImpl implements DatabaseConnectorService {
     @Override
     public void init() throws ConnectionInitException {
         // Connect to db servers
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
         final var idList = EnvUtils.getEnvironmentIds(CONNECTION_TYPE);
         this.logger.info(String.format("%d connection(s) to initialize", idList.size()));
         for (String id : idList) {
