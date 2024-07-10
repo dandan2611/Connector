@@ -52,7 +52,7 @@ public class ConnectorPlugin {
         }
     }
 
-    @Subscribe(order = PostOrder.LAST)
+    @Subscribe(order = PostOrder.LAST, async = false)
     private void onProxyShutdown(final @NotNull ProxyShutdownEvent event) {
         Connector.getDatabaseService().shutdown();
         Connector.getRedisService().shutdown();
