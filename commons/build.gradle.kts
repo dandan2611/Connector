@@ -51,6 +51,15 @@ tasks.javadoc {
         addBooleanOption("Xdoclint:none", true)
         encoding = "UTF-8"
         charSet = "UTF-8"
+        links(
+            "https://docs.oracle.com/en/java/javase/21/docs/api/",
+            "https://javadoc.io/static/org.redisson/redisson/3.29.0/",
+            "https://javadoc.io/static/com.zaxxer/HikariCP/5.1.0/",
+            "https://javadoc.io/static/org.mariadb.jdbc/mariadb-java-client/3.4.0/",
+            "https://javadoc.io/static/com.rabbitmq/amqp-client/5.21.0/",
+            "https://javadoc.io/static/org.apache.kafka/kafka-clients/3.7.0/",
+            "https://javadoc.io/static/org.jetbrains/annotations/24.1.0/"
+        )
     }
 }
 
