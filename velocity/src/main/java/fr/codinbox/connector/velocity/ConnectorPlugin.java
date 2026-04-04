@@ -8,14 +8,27 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
 import fr.codinbox.connector.commons.database.DatabaseConnectorServiceImpl;
 import fr.codinbox.connector.commons.exception.ConnectionInitException;
+import fr.codinbox.connector.commons.kafka.KafkaConnectorServiceImpl;
+import fr.codinbox.connector.commons.rabbitmq.RabbitMQConnectorServiceImpl;
 import fr.codinbox.connector.commons.redis.RedisConnectorServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+/**
+ * Velocity proxy plugin entry point for the Connector library.
+ *
+ * <p>This plugin initializes all four connector services (Database, Redis, RabbitMQ, Kafka)
+ * and makes them available through the {@link Connector} static accessor.</p>
+ *
+ * <p>Initialization order: Database, Redis, RabbitMQ, Kafka. If any connector with
+ * exit-on-failure enabled fails, the proxy is shut down immediately.</p>
+ *
+ * @see Connector
+ */
 @Plugin(
         id = "connector",
         name = "connector",
-        version = "6.0.6",
+        version = "7.0.0",
         authors = {"dandan2611"}
 )
 public class ConnectorPlugin {
@@ -29,19 +42,19 @@ public class ConnectorPlugin {
     public ConnectorPlugin() {
         final java.util.logging.Logger javaLogger = java.util.logging.Logger.getLogger("connector");
 
+        // Database
         final var databaseServiceImpl = new DatabaseConnectorServiceImpl(javaLogger);
-
         try {
             databaseServiceImpl.init();
             Connector.setDatabaseService(databaseServiceImpl);
         } catch (ConnectionInitException exception) {
-            this.logger.error("Failed to initialize RedisConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.logger.error("Failed to initialize DatabaseConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
             this.server.shutdown();
             return;
         }
 
+        // Redis
         final var redisServiceImpl = new RedisConnectorServiceImpl(javaLogger);
-
         try {
             redisServiceImpl.init();
             Connector.setRedisService(redisServiceImpl);
@@ -50,12 +63,35 @@ public class ConnectorPlugin {
             this.server.shutdown();
             return;
         }
+
+        // RabbitMQ
+        final var rabbitMQServiceImpl = new RabbitMQConnectorServiceImpl(javaLogger);
+        try {
+            rabbitMQServiceImpl.init();
+            Connector.setRabbitMQService(rabbitMQServiceImpl);
+        } catch (ConnectionInitException exception) {
+            this.logger.error("Failed to initialize RabbitMQConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.server.shutdown();
+            return;
+        }
+
+        // Kafka
+        final var kafkaServiceImpl = new KafkaConnectorServiceImpl(javaLogger);
+        try {
+            kafkaServiceImpl.init();
+            Connector.setKafkaService(kafkaServiceImpl);
+        } catch (ConnectionInitException exception) {
+            this.logger.error("Failed to initialize KafkaConnectorService, one or more connections failed to initialize and has exit on failure enabled. Shutting down server.");
+            this.server.shutdown();
+            return;
+        }
     }
 
     @Subscribe(order = PostOrder.LAST, async = false)
     private void onProxyShutdown(final @NotNull ProxyShutdownEvent event) {
-        Connector.getDatabaseService().shutdown();
+        Connector.getKafkaService().shutdown();
+        Connector.getRabbitMQService().shutdown();
         Connector.getRedisService().shutdown();
+        Connector.getDatabaseService().shutdown();
     }
-
 }

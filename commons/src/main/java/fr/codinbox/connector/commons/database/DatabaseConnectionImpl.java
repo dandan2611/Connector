@@ -12,6 +12,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
+/**
+ * Implementation of {@link DatabaseConnection} that uses HikariCP for connection pooling.
+ *
+ * @see DatabaseConnection
+ */
 public class DatabaseConnectionImpl implements DatabaseConnection {
 
     private final @NotNull Logger logger;
@@ -22,6 +27,13 @@ public class DatabaseConnectionImpl implements DatabaseConnection {
 
     private @Nullable HikariDataSource dataSource;
 
+    /**
+     * Creates a new database connection instance.
+     *
+     * @param logger         the logger for diagnostic messages
+     * @param id             the connection identifier
+     * @param configFilePath the path to the HikariCP {@code .properties} configuration file
+     */
     public DatabaseConnectionImpl(final @NotNull Logger logger,
                                   final @NotNull String id,
                                   final @NotNull String configFilePath) {

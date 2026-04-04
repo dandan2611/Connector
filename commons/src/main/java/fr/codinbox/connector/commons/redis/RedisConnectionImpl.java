@@ -14,6 +14,12 @@ import java.io.File;
 import java.util.Objects;
 import java.util.logging.Logger;
 
+/**
+ * Implementation of {@link RedisConnection} that loads Redisson configuration
+ * from a YAML file and manages the Redisson client lifecycle.
+ *
+ * @see RedisConnection
+ */
 public class RedisConnectionImpl implements RedisConnection {
 
     private final @NotNull Logger logger;
@@ -24,6 +30,13 @@ public class RedisConnectionImpl implements RedisConnection {
 
     private @Nullable RedissonClient client;
 
+    /**
+     * Creates a new Redis connection instance.
+     *
+     * @param logger         the logger for diagnostic messages
+     * @param id             the connection identifier
+     * @param configFilePath the path to the YAML configuration file ({@code .yml} or {@code .yaml})
+     */
     public RedisConnectionImpl(final @NotNull Logger logger,
                                final @NotNull String id,
                                final @NotNull String configFilePath) {

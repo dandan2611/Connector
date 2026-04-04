@@ -1,4 +1,4 @@
-package fr.codinbox.connector.commons.database;
+package fr.codinbox.connector.commons.kafka;
 
 import fr.codinbox.connector.commons.exception.ConnectionInitException;
 import org.jetbrains.annotations.NotNull;
@@ -6,44 +6,41 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 /**
- * Service interface for managing multiple named database connections.
+ * Service interface for managing multiple named Kafka connections.
  *
  * <p>Connections are discovered from environment variables with the
- * {@code CONNECTOR_DB_} prefix. Each connection is identified by a unique name
+ * {@code CONNECTOR_KAFKA_} prefix. Each connection is identified by a unique name
  * extracted from the environment variable pattern
- * {@code CONNECTOR_DB_<NAME>_CONFIG}.</p>
+ * {@code CONNECTOR_KAFKA_<NAME>_CONFIG}.</p>
  *
  * <p><b>Logging contract:</b></p>
  * <ul>
- *   <li>{@code INFO} — lifecycle events (initialization start, connection count, connection created)</li>
+ *   <li>{@code INFO} — lifecycle events (initialization start, connection count, configuration loaded)</li>
  *   <li>{@code WARNING} — recoverable failures (missing config when exit-on-failure is disabled)</li>
  *   <li>{@code SEVERE} — fatal failures that will cause server shutdown</li>
  * </ul>
  *
- * @see DatabaseConnection
+ * @see KafkaConnection
  */
-public interface DatabaseConnectorService {
+public interface KafkaConnectorService {
 
     /**
-     * Initializes all database connections discovered from environment variables.
-     *
-     * <p>Loads the MariaDB JDBC driver and creates HikariCP pools for each
-     * configured connection.</p>
+     * Initializes all Kafka connections discovered from environment variables.
      *
      * @throws ConnectionInitException if a connection with exit-on-failure enabled fails to initialize
      */
     void init() throws ConnectionInitException;
 
     /**
-     * Shuts down all managed database connection pools.
+     * Shuts down all managed Kafka connections, gracefully closing all tracked clients.
      */
     void shutdown();
 
     /**
-     * Retrieves a database connection by its identifier.
+     * Retrieves a Kafka connection by its identifier.
      *
      * @param id the connection identifier (case-sensitive, as extracted from environment variables)
      * @return an {@link Optional} containing the connection, or empty if no connection exists with that id
      */
-    @NotNull Optional<DatabaseConnection> getConnection(final @NotNull String id);
+    @NotNull Optional<KafkaConnection> getConnection(final @NotNull String id);
 }

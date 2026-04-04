@@ -4,14 +4,19 @@ import fr.codinbox.connector.commons.utils.ConnectionType;
 import fr.codinbox.connector.commons.exception.ConnectionInitException;
 import fr.codinbox.connector.commons.utils.EnvUtils;
 import org.jetbrains.annotations.NotNull;
-import org.redisson.client.RedisConnectionException;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Default implementation of {@link DatabaseConnectorService} that discovers and manages
+ * database connections from environment variables.
+ *
+ * @see DatabaseConnectorService
+ * @see DatabaseConnectionImpl
+ */
 public class DatabaseConnectorServiceImpl implements DatabaseConnectorService {
 
     private static final @NotNull ConnectionType CONNECTION_TYPE = ConnectionType.DATABASE;
@@ -20,6 +25,11 @@ public class DatabaseConnectorServiceImpl implements DatabaseConnectorService {
 
     private final @NotNull Map<String, DatabaseConnection> sqlConnectionMap;
 
+    /**
+     * Creates a new database connector service.
+     *
+     * @param logger the logger for diagnostic messages
+     */
     public DatabaseConnectorServiceImpl(final @NotNull Logger logger) {
         this.logger = logger;
         this.sqlConnectionMap = new HashMap<>();
@@ -55,7 +65,7 @@ public class DatabaseConnectorServiceImpl implements DatabaseConnectorService {
             } catch (Exception exception) {
                 logger.log(Level.SEVERE, "Failed to create connection for id: " + id, exception);
                 if (EnvUtils.isExitOnFailure(CONNECTION_TYPE, id)) {
-                    throw new RedisConnectionException("Failed to create connection for id: " + id, exception);
+                    throw new ConnectionInitException("Failed to create connection for id: " + id);
                 }
             }
         }

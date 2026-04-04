@@ -1,52 +1,111 @@
 # Connector
 
-Easily centralize connections to databases and Redis in your server, and access them through a blazingly simple api.
+Centralize connections to **databases**, **Redis**, **RabbitMQ**, and **Kafka** in your Minecraft server or proxy, and access them through a simple API.
+
+Connector is a multi-platform library for [PaperMC](https://papermc.io/) servers and [Velocity](https://velocitypowered.com/) proxies. It discovers connections from environment variables, loads configuration files, and registers services that other plugins can consume.
+
+**[Javadoc](https://dandan2611.github.io/Connector/)**
 
 ---
 
 ## Installation
 
-Download latest release from [here](https://nexus.codinbox.fr/#browse/browse:maven-public:fr%2Fcodinbox%2Fredisconnector) corresponding to your platform
+**Requires Java 21.**
 
-```Kotlin
+Add the Connector dependency to your plugin project:
+
+<details>
+<summary>Gradle (Kotlin DSL)</summary>
+
+```kotlin
 repositories {
     maven("https://nexus.codinbox.fr/repository/maven-public")
 }
 
 dependencies {
-    implementation("fr.codinbox.connector:paper:version")
-    implementation("fr.codinbox.connector:velocity:version")
+    // For Paper plugins
+    implementation("fr.codinbox.connector:paper:7.0.0")
+
+    // For Velocity plugins
+    implementation("fr.codinbox.connector:velocity:7.0.0")
+
+    // Commons only (interfaces + implementations, no platform code)
+    implementation("fr.codinbox.connector:commons:7.0.0")
 }
 ```
 
-## Config
+</details>
 
-### Databases
+<details>
+<summary>Maven</summary>
 
-Connector connects to databases using HikariCP. Connector can be configured using the following environment variables:
+```xml
+<repositories>
+    <repository>
+        <id>codinbox</id>
+        <url>https://nexus.codinbox.fr/repository/maven-public</url>
+    </repository>
+</repositories>
 
-- `CONNECTOR_DB_<NAME>_CONFIG=file1.properties` : A file to load the database configuration from. HikariCP configuration documentation can be found [here](https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby)
-- `CONNECTOR_DB_<NAME>_EXIT_ON_FAILURE=true` : If the connection fails, the server will exit immediately. Default is `true`.
+<dependencies>
+    <!-- For Paper plugins -->
+    <dependency>
+        <groupId>fr.codinbox.connector</groupId>
+        <artifactId>paper</artifactId>
+        <version>7.0.0</version>
+    </dependency>
 
-Example simple configuration file:
+    <!-- For Velocity plugins -->
+    <dependency>
+        <groupId>fr.codinbox.connector</groupId>
+        <artifactId>velocity</artifactId>
+        <version>7.0.0</version>
+    </dependency>
+</dependencies>
+```
 
+</details>
+
+---
+
+## Configuration
+
+Each connector type is configured via **environment variables** that point to configuration files. The general pattern is:
+
+```
+CONNECTOR_<TYPE>_<NAME>_CONFIG=/path/to/config.file
+CONNECTOR_<TYPE>_<NAME>_EXIT_ON_FAILURE=true
+```
+
+- `<NAME>` is a unique identifier for the connection (e.g., `MAIN`, `CACHE`, `EVENTS`).
+- `EXIT_ON_FAILURE` defaults to `true` — the server shuts down if initialization fails.
+
+### Database
+
+Uses [HikariCP](https://github.com/brettwooldridge/HikariCP) for connection pooling with the MariaDB JDBC driver.
+
+**Environment variables:**
+- `CONNECTOR_DB_<NAME>_CONFIG` — path to a HikariCP `.properties` file
+- `CONNECTOR_DB_<NAME>_EXIT_ON_FAILURE` — `true` or `false` (default: `true`)
+
+**Example `database.properties`:**
 ```properties
 driverClassName=org.mariadb.jdbc.Driver
-jdbcUrl=jdbc:mariadb://IP:PORT/yourdb
-dataSource.user=youruserhere
-dataSource.password=hypersecretpassword
-dataSource.databaseName=superduperdatabase
+jdbcUrl=jdbc:mariadb://127.0.0.1:3306/mydb
+dataSource.user=myuser
+dataSource.password=mypassword
+dataSource.databaseName=mydb
 ```
 
 ### Redis
 
-Connector can be configured using the following environment variables:
+Uses [Redisson](https://github.com/redisson/redisson) for Redis connectivity.
 
-- `CONNECTOR_REDIS_<NAME>_CONFIG=file1.yml` : A file to load the redis configuration from. Redisson configuration documentation can be found [here](https://github.com/redisson/redisson/wiki/2.-Configuration). The file extension must be `.yml` or `.yaml`. `<NAME>` is the name of the connection, and must be unique.
-- `CONNECTOR_REDIS_<NAME>_EXIT_ON_FAILURE=true` : If the connection fails, the server will exit immediately. Default is `true`.
+**Environment variables:**
+- `CONNECTOR_REDIS_<NAME>_CONFIG` — path to a Redisson YAML file (`.yml` or `.yaml`)
+- `CONNECTOR_REDIS_<NAME>_EXIT_ON_FAILURE` — `true` or `false` (default: `true`)
 
-Example simple configuration file:
-
+**Example `redis.yml`:**
 ```yaml
 codec: !<fr.codinbox.connector.commons.codec.JsonJacksonConnectorCodec> {}
 singleServerConfig:
@@ -60,5 +119,207 @@ singleServerConfig:
   database: 0
   username: null
   password: null
-  clientName: "RedisConnector"
+  clientName: "Connector"
 ```
+
+### RabbitMQ
+
+Uses the [RabbitMQ Java Client](https://www.rabbitmq.com/java-client.html) with a built-in fixed-size channel pool.
+
+**Environment variables:**
+- `CONNECTOR_RABBITMQ_<NAME>_CONFIG` — path to a `.properties` file
+- `CONNECTOR_RABBITMQ_<NAME>_EXIT_ON_FAILURE` — `true` or `false` (default: `true`)
+
+**Example `rabbitmq.properties`:**
+```properties
+host=127.0.0.1
+port=5672
+username=guest
+password=guest
+virtualHost=/
+ssl=false
+channelPoolSize=5
+```
+
+**Supported properties:**
+
+| Property | Default | Description |
+|---|---|---|
+| `host` | `localhost` | Broker hostname |
+| `port` | `5672` | Broker port |
+| `username` | `guest` | Authentication username |
+| `password` | `guest` | Authentication password |
+| `virtualHost` | `/` | Virtual host |
+| `ssl` | `false` | Enable SSL with default JVM SSLContext |
+| `channelPoolSize` | `5` | Fixed channel pool size |
+
+### Kafka
+
+Uses the [Apache Kafka Clients](https://kafka.apache.org/documentation/) library. The connection exposes the loaded properties and provides factory methods for creating producers, consumers, and admin clients.
+
+**Environment variables:**
+- `CONNECTOR_KAFKA_<NAME>_CONFIG` — path to a `.properties` file (must contain `bootstrap.servers`)
+- `CONNECTOR_KAFKA_<NAME>_EXIT_ON_FAILURE` — `true` or `false` (default: `true`)
+
+**Example `kafka.properties`:**
+```properties
+bootstrap.servers=127.0.0.1:9092
+client.id=my-server
+shutdownTimeoutMs=30000
+```
+
+**Notes:**
+- `bootstrap.servers` is **required** — initialization fails without it.
+- `shutdownTimeoutMs` (default: `30000`) controls the graceful shutdown timeout for tracked clients. This property is consumed by Connector and not passed to Kafka clients.
+- All created producers, consumers, and admin clients are tracked and closed gracefully on shutdown.
+
+---
+
+## Usage
+
+### Paper
+
+Services are registered with Bukkit's `ServicesManager`. Quick example:
+
+```java
+var redis = getServer().getServicesManager().load(RedisConnectorService.class);
+redis.getConnection("MAIN").ifPresent(conn -> {
+    RedissonClient client = conn.getClient();
+    // use client...
+});
+```
+
+<details>
+<summary>Full example</summary>
+
+```java
+import fr.codinbox.connector.commons.redis.RedisConnectorService;
+import fr.codinbox.connector.commons.database.DatabaseConnectorService;
+import fr.codinbox.connector.commons.rabbitmq.RabbitMQConnectorService;
+import fr.codinbox.connector.commons.kafka.KafkaConnectorService;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class MyPlugin extends JavaPlugin {
+
+    @Override
+    public void onEnable() {
+        // Redis
+        var redisService = getServer().getServicesManager().load(RedisConnectorService.class);
+        redisService.getConnection("MAIN").ifPresent(conn -> {
+            var client = conn.getClient();
+            // Use Redisson client...
+        });
+
+        // Database
+        var dbService = getServer().getServicesManager().load(DatabaseConnectorService.class);
+        dbService.getConnection("MAIN").ifPresent(conn -> {
+            try (var sqlConn = conn.getConnection()) {
+                // Use JDBC connection...
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // RabbitMQ
+        var rabbitService = getServer().getServicesManager().load(RabbitMQConnectorService.class);
+        rabbitService.getConnection("MAIN").ifPresent(conn -> {
+            try (var channel = conn.borrowChannel()) {
+                channel.basicPublish("exchange", "key", null, "hello".getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Kafka
+        var kafkaService = getServer().getServicesManager().load(KafkaConnectorService.class);
+        kafkaService.getConnection("EVENTS").ifPresent(conn -> {
+            var producer = conn.createProducer();
+            // Use producer... it will be closed on shutdown
+        });
+    }
+}
+```
+
+</details>
+
+### Velocity
+
+Services are accessed through the static `Connector` class:
+
+```java
+var redis = Connector.getRedisService();
+redis.getConnection("MAIN").ifPresent(conn -> {
+    RedissonClient client = conn.getClient();
+    // use client...
+});
+```
+
+<details>
+<summary>Full example</summary>
+
+```java
+import fr.codinbox.connector.velocity.Connector;
+import fr.codinbox.connector.commons.redis.RedisConnectorService;
+import fr.codinbox.connector.commons.database.DatabaseConnectorService;
+import fr.codinbox.connector.commons.rabbitmq.RabbitMQConnectorService;
+import fr.codinbox.connector.commons.kafka.KafkaConnectorService;
+
+public class MyVelocityPlugin {
+
+    public void example() {
+        // Redis
+        RedisConnectorService redis = Connector.getRedisService();
+        redis.getConnection("MAIN").ifPresent(conn -> {
+            var client = conn.getClient();
+            // Use Redisson client...
+        });
+
+        // Database
+        DatabaseConnectorService db = Connector.getDatabaseService();
+        db.getConnection("MAIN").ifPresent(conn -> {
+            try (var sqlConn = conn.getConnection()) {
+                // Use JDBC connection...
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // RabbitMQ
+        RabbitMQConnectorService rabbit = Connector.getRabbitMQService();
+        rabbit.getConnection("MAIN").ifPresent(conn -> {
+            try (var channel = conn.borrowChannel()) {
+                channel.basicPublish("exchange", "key", null, "hello".getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        // Kafka
+        KafkaConnectorService kafka = Connector.getKafkaService();
+        kafka.getConnection("EVENTS").ifPresent(conn -> {
+            var producer = conn.createProducer();
+            // Use producer... it will be closed on shutdown
+        });
+    }
+}
+```
+
+</details>
+
+---
+
+## Migration from 6.x
+
+**Breaking changes in 7.0.0:**
+
+- **Java 21 required** — Connector 7.0.0 requires Java 21. Update your build toolchain and server runtime.
+- **Shadow relocations** — All dependencies (Redisson, HikariCP, MariaDB, RabbitMQ, Kafka, Jackson) are now relocated under `fr.codinbox.connector.libs.*` in the platform JARs. Downstream plugins using the shadow JAR will see relocated types.
+- **New `ConnectionType` values** — The `ConnectionType` enum now includes `RABBITMQ` and `KAFKA` in addition to `REDIS` and `DATABASE`.
+- **Bug fix** — `DatabaseConnectorServiceImpl` previously threw `RedisConnectionException` on failure; it now correctly throws `ConnectionInitException`.
+- **Project renamed** — The root project is now named `Connector` (was `RedisConnector`).
+
+---
+
+## License
+
+See [LICENSE](LICENSE) for details.

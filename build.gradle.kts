@@ -1,7 +1,7 @@
 plugins {
     java
     `java-library`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "8.3.0"
 }
 
 repositories {
@@ -11,9 +11,9 @@ repositories {
 dependencies {}
 
 group = "fr.codinbox.connector"
-version = "6.0.6"
+version = "7.0.0"
 
-val targetJavaVersion = JavaVersion.VERSION_17
+val targetJavaVersion = JavaVersion.VERSION_21
 java {
     sourceCompatibility = targetJavaVersion
     targetCompatibility = targetJavaVersion
@@ -24,7 +24,7 @@ java {
 
 tasks.withType(JavaCompile::class).configureEach {
     if (targetJavaVersion >= JavaVersion.VERSION_1_10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion.majorVersion.toInt()) // The string represent a number, like "1" for Java1
+        options.release.set(targetJavaVersion.majorVersion.toInt())
     }
 
     options.encoding = Charsets.UTF_8.name()
@@ -32,4 +32,34 @@ tasks.withType(JavaCompile::class).configureEach {
 
 tasks.build {
     dependsOn(tasks.shadowJar)
+}
+
+tasks.register<Javadoc>("aggregateJavadoc") {
+    group = "documentation"
+    description = "Generates aggregated Javadoc for commons module and Velocity Connector accessor."
+
+    val commonsProject = project(":commons")
+    val velocityProject = project(":velocity")
+
+    dependsOn(commonsProject.tasks.named("classes"), velocityProject.tasks.named("classes"))
+
+    source(commonsProject.sourceSets["main"].allJava)
+    source(velocityProject.sourceSets["main"].allJava.matching {
+        include("**/Connector.java")
+    })
+
+    classpath = files(
+        commonsProject.sourceSets["main"].compileClasspath,
+        velocityProject.sourceSets["main"].compileClasspath
+    )
+
+    destinationDir = file("${layout.buildDirectory.get()}/docs/javadoc")
+
+    options {
+        this as StandardJavadocDocletOptions
+        encoding = "UTF-8"
+        charSet = "UTF-8"
+        addBooleanOption("Xdoclint:none", true)
+        links("https://docs.oracle.com/en/java/javase/21/docs/api/")
+    }
 }

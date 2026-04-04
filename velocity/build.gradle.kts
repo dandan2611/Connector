@@ -2,11 +2,11 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.gradleup.shadow") version "8.3.0"
 }
 
 group = "fr.codinbox.connector"
-version = "6.0.6"
+version = "7.0.0"
 
 repositories {
     mavenCentral()
@@ -19,7 +19,7 @@ dependencies {
     annotationProcessor("com.velocitypowered:velocity-api:3.3.0-SNAPSHOT")
 }
 
-val targetJavaVersion = JavaVersion.VERSION_17
+val targetJavaVersion = JavaVersion.VERSION_21
 java {
     sourceCompatibility = targetJavaVersion
     targetCompatibility = targetJavaVersion
@@ -30,7 +30,7 @@ java {
 
 tasks.withType(JavaCompile::class).configureEach {
     if (targetJavaVersion >= JavaVersion.VERSION_1_10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion.majorVersion.toInt()) // The string represent a number, like "1" for Java1
+        options.release.set(targetJavaVersion.majorVersion.toInt())
     }
 
     options.encoding = Charsets.UTF_8.name()
@@ -38,6 +38,12 @@ tasks.withType(JavaCompile::class).configureEach {
 
 tasks.shadowJar {
     archiveBaseName.set("connector-velocity")
+    relocate("org.redisson", "fr.codinbox.connector.libs.redisson")
+    relocate("com.zaxxer.hikari", "fr.codinbox.connector.libs.hikari")
+    relocate("org.mariadb", "fr.codinbox.connector.libs.mariadb")
+    relocate("com.rabbitmq", "fr.codinbox.connector.libs.rabbitmq")
+    relocate("org.apache.kafka", "fr.codinbox.connector.libs.kafka")
+    relocate("com.fasterxml.jackson", "fr.codinbox.connector.libs.jackson")
 }
 
 tasks.jar {
@@ -49,7 +55,6 @@ tasks.build {
 }
 
 tasks.processResources.configure {
-    // Define properties
     val props = mapOf(Pair("version", version))
 
     inputs.properties(props)

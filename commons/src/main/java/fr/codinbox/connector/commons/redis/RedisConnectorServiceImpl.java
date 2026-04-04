@@ -12,6 +12,13 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Default implementation of {@link RedisConnectorService} that discovers and manages
+ * Redis connections from environment variables.
+ *
+ * @see RedisConnectorService
+ * @see RedisConnectionImpl
+ */
 public class RedisConnectorServiceImpl implements RedisConnectorService {
 
     private static final @NotNull ConnectionType CONNECTION_TYPE = ConnectionType.REDIS;
@@ -20,6 +27,11 @@ public class RedisConnectorServiceImpl implements RedisConnectorService {
 
     private final @NotNull Map<String, RedisConnection> redisConnectionMap;
 
+    /**
+     * Creates a new Redis connector service.
+     *
+     * @param logger the logger for diagnostic messages
+     */
     public RedisConnectorServiceImpl(final @NotNull Logger logger) {
         this.logger = logger;
         this.redisConnectionMap = new HashMap<>();

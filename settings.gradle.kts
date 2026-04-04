@@ -1,4 +1,4 @@
-rootProject.name = "RedisConnector"
+rootProject.name = "Connector"
 include("commons")
 include("paper")
 include("velocity")
