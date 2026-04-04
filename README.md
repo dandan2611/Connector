@@ -24,13 +24,13 @@ repositories {
 
 dependencies {
     // For Paper plugins
-    implementation("fr.codinbox.connector:paper:7.0.0")
+    implementation("fr.codinbox.connector:paper:7.0.1")
 
     // For Velocity plugins
-    implementation("fr.codinbox.connector:velocity:7.0.0")
+    implementation("fr.codinbox.connector:velocity:7.0.1")
 
     // Commons only (interfaces + implementations, no platform code)
-    implementation("fr.codinbox.connector:commons:7.0.0")
+    implementation("fr.codinbox.connector:commons:7.0.1")
 }
 ```
 
@@ -52,14 +52,14 @@ dependencies {
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>paper</artifactId>
-        <version>7.0.0</version>
+        <version>7.0.1</version>
     </dependency>
 
     <!-- For Velocity plugins -->
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>velocity</artifactId>
-        <version>7.0.0</version>
+        <version>7.0.1</version>
     </dependency>
 </dependencies>
 ```

@@ -11,7 +11,7 @@ repositories {
 dependencies {}
 
 group = "fr.codinbox.connector"
-version = "7.0.0"
+version = "7.0.1"
 
 val targetJavaVersion = JavaVersion.VERSION_21
 java {
