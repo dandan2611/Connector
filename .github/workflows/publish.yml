@@ -1,22 +1,75 @@
 name: Publish
+
 on:
-  release:
-    types:
-      - published
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build
+
       - name: Publish package
         run: ./gradlew publish
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+
+      - name: Extract version
+        id: version
+        run: echo "version=$(grep '^version' build.gradle.kts | sed 's/.*"\(.*\)"/\1/')" >> "$GITHUB_OUTPUT"
+
+      - name: Generate release notes
+        id: notes
+        run: |
+          TAG="v${{ steps.version.outputs.version }}"
+          if git rev-parse "$TAG" >/dev/null 2>&1; then
+            END_REF="$TAG"
+          else
+            END_REF="HEAD"
+          fi
+          PREV_TAG=$(git tag --sort=-creatordate | grep -v "$TAG" | head -1)
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          if [ -n "$PREV_TAG" ]; then
+            LOG=$(git log "$PREV_TAG".."$END_REF" --pretty=format:"- %s")
+          else
+            LOG=$(git log --pretty=format:"- %s" "$END_REF")
+          fi
+          {
+            echo "body<<EOFNOTES"
+            echo "## What's Changed"
+            echo ""
+            echo "$LOG"
+            echo "EOFNOTES"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.notes.outputs.tag }}
+          name: ${{ steps.notes.outputs.tag }}
+          body: ${{ steps.notes.outputs.body }}
+          files: |
+            commons/build/libs/commons-*.jar
+            paper/build/libs/connector-paper-*-all.jar
+            velocity/build/libs/connector-velocity-*-all.jar
