@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 @Plugin(
         id = "connector",
         name = "connector",
-        version = "8.0.0",
+        version = "8.0.1",
         authors = {"dandan2611"}
 )
 public class ConnectorPlugin {

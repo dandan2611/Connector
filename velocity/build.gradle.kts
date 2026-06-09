@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "8.0.0"
+version = "8.0.1"
 
 repositories {
     mavenCentral()
@@ -40,7 +40,6 @@ tasks.shadowJar {
     archiveBaseName.set("connector-velocity")
     relocate("org.redisson", "fr.codinbox.connector.libs.redisson")
     relocate("com.zaxxer.hikari", "fr.codinbox.connector.libs.hikari")
-    relocate("org.mariadb", "fr.codinbox.connector.libs.mariadb")
     relocate("com.rabbitmq", "fr.codinbox.connector.libs.rabbitmq")
     relocate("com.fasterxml.jackson", "fr.codinbox.connector.libs.jackson")
 }
