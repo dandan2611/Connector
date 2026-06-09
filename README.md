@@ -24,13 +24,13 @@ repositories {
 
 dependencies {
     // For Paper plugins
-    implementation("fr.codinbox.connector:paper:8.0.1")
+    implementation("fr.codinbox.connector:paper:8.1.0")
 
     // For Velocity plugins
-    implementation("fr.codinbox.connector:velocity:8.0.1")
+    implementation("fr.codinbox.connector:velocity:8.1.0")
 
     // Commons only (interfaces + implementations, no platform code)
-    implementation("fr.codinbox.connector:commons:8.0.1")
+    implementation("fr.codinbox.connector:commons:8.1.0")
 }
 ```
 
@@ -52,14 +52,14 @@ dependencies {
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>paper</artifactId>
-        <version>8.0.1</version>
+        <version>8.1.0</version>
     </dependency>
 
     <!-- For Velocity plugins -->
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>velocity</artifactId>
-        <version>8.0.1</version>
+        <version>8.1.0</version>
     </dependency>
 </dependencies>
 ```
@@ -277,7 +277,7 @@ public class MyVelocityPlugin {
 **Breaking changes in 7.0.0:**
 
 - **Java 21 required** — Connector 7.0.0 requires Java 21. Update your build toolchain and server runtime.
-- **Shadow relocations** — Redisson, HikariCP, RabbitMQ, and Jackson are now relocated under `fr.codinbox.connector.libs.*` in the platform JARs. The MariaDB JDBC driver keeps its original `org.mariadb` package so HikariCP configuration files can keep using `driverClassName=org.mariadb.jdbc.Driver`.
+- **Shaded dependencies** — Platform JARs include their runtime dependencies without package relocation.
 - **New `ConnectionType` values** — The `ConnectionType` enum now includes `RABBITMQ` in addition to `REDIS` and `DATABASE`.
 - **Bug fix** — `DatabaseConnectorServiceImpl` previously threw `RedisConnectionException` on failure; it now correctly throws `ConnectionInitException`.
 - **Project renamed** — The root project is now named `Connector` (was `RedisConnector`).

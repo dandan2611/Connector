@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "8.0.1"
+version = "8.1.0"
 
 repositories {
     mavenCentral()
@@ -38,10 +38,6 @@ tasks.withType(JavaCompile::class).configureEach {
 
 tasks.shadowJar {
     archiveBaseName.set("connector-paper")
-    relocate("org.redisson", "fr.codinbox.connector.libs.redisson")
-    relocate("com.zaxxer.hikari", "fr.codinbox.connector.libs.hikari")
-    relocate("com.rabbitmq", "fr.codinbox.connector.libs.rabbitmq")
-    relocate("com.fasterxml.jackson", "fr.codinbox.connector.libs.jackson")
 }
 
 tasks.jar {
