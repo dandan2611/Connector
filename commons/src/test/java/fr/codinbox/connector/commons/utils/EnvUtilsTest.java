@@ -38,7 +38,6 @@ class EnvUtilsTest {
         assertEquals("CONNECTOR_REDIS_", EnvUtils.getPrefix(ConnectionType.REDIS));
         assertEquals("CONNECTOR_DB_", EnvUtils.getPrefix(ConnectionType.DATABASE));
         assertEquals("CONNECTOR_RABBITMQ_", EnvUtils.getPrefix(ConnectionType.RABBITMQ));
-        assertEquals("CONNECTOR_KAFKA_", EnvUtils.getPrefix(ConnectionType.KAFKA));
     }
 
     @Test
@@ -83,7 +82,7 @@ class EnvUtilsTest {
 
     @Test
     void getEnvironmentIds_empty() {
-        List<String> ids = EnvUtils.getEnvironmentIds(ConnectionType.KAFKA);
+        List<String> ids = EnvUtils.getEnvironmentIds(ConnectionType.RABBITMQ);
         assertTrue(ids.isEmpty());
     }
 
@@ -97,12 +96,4 @@ class EnvUtilsTest {
         assertEquals("TEST", ids.get(0));
     }
 
-    @Test
-    void getEnvironmentIds_kafkaPrefix() {
-        env.set("CONNECTOR_KAFKA_EVENTS_CONFIG", "/path/kafka.properties");
-
-        List<String> ids = EnvUtils.getEnvironmentIds(ConnectionType.KAFKA);
-        assertEquals(1, ids.size());
-        assertEquals("EVENTS", ids.get(0));
-    }
 }

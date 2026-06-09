@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "7.0.1"
+version = "8.0.0"
 
 repositories {
     mavenCentral()
@@ -24,9 +24,6 @@ dependencies {
 
     // RabbitMQ
     api("com.rabbitmq:amqp-client:5.21.0")
-
-    // Kafka
-    api("org.apache.kafka:kafka-clients:3.7.0")
 
     // Json
     api("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.0")

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "fr.codinbox.connector"
-version = "7.0.1"
+version = "8.0.0"
 
 repositories {
     mavenCentral()
@@ -42,7 +42,6 @@ tasks.shadowJar {
     relocate("com.zaxxer.hikari", "fr.codinbox.connector.libs.hikari")
     relocate("org.mariadb", "fr.codinbox.connector.libs.mariadb")
     relocate("com.rabbitmq", "fr.codinbox.connector.libs.rabbitmq")
-    relocate("org.apache.kafka", "fr.codinbox.connector.libs.kafka")
     relocate("com.fasterxml.jackson", "fr.codinbox.connector.libs.jackson")
 }
 

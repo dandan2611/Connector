@@ -4,7 +4,7 @@ package fr.codinbox.connector.commons.exception;
  * Exception thrown when a connector connection fails to initialize.
  *
  * <p>This exception is used consistently across all connector types (Redis, Database,
- * RabbitMQ, Kafka) to signal initialization failures. When a connection is configured
+ * RabbitMQ) to signal initialization failures. When a connection is configured
  * with exit-on-failure enabled, this exception causes the server to shut down.</p>
  *
  * @see fr.codinbox.connector.commons.utils.EnvUtils#isExitOnFailure

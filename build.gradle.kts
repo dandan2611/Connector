@@ -11,7 +11,7 @@ repositories {
 dependencies {}
 
 group = "fr.codinbox.connector"
-version = "7.0.1"
+version = "8.0.0"
 
 val targetJavaVersion = JavaVersion.VERSION_21
 java {
@@ -43,7 +43,6 @@ dependencies {
     javadocClasspath("com.zaxxer:HikariCP:5.1.0")
     javadocClasspath("org.mariadb.jdbc:mariadb-java-client:3.4.0")
     javadocClasspath("com.rabbitmq:amqp-client:5.21.0")
-    javadocClasspath("org.apache.kafka:kafka-clients:3.7.0")
     javadocClasspath("org.jetbrains:annotations:24.1.0")
 }
 
@@ -64,10 +63,6 @@ val librarySpecs = listOf(
         includes = listOf("com/rabbitmq/client/**"),
         excludes = listOf("**/impl/MicrometerMetricsCollector.java", "**/impl/OpenTelemetryMetricsCollector.java",
             "**/impl/StandardMetricsCollector.java", "**/observation/**")
-    ),
-    LibSource("org.apache.kafka:kafka-clients:3.7.0:sources",
-        includes = listOf("org/apache/kafka/clients/producer/**", "org/apache/kafka/clients/consumer/**",
-            "org/apache/kafka/clients/admin/**", "org/apache/kafka/common/serialization/**")
     ),
     LibSource("org.jetbrains:annotations:24.1.0:sources",
         includes = listOf("org/jetbrains/annotations/**")

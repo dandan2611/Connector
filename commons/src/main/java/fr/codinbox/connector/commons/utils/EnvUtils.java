@@ -14,7 +14,6 @@ import java.util.List;
  *   <li>Redis: {@value #REDIS_PREFIX}</li>
  *   <li>Database: {@value #MYSQL_PREFIX}</li>
  *   <li>RabbitMQ: {@value #RABBITMQ_PREFIX}</li>
- *   <li>Kafka: {@value #KAFKA_PREFIX}</li>
  * </ul>
  *
  * <p>Environment variables follow the pattern
@@ -41,11 +40,6 @@ public final class EnvUtils {
     public static final @NotNull String RABBITMQ_PREFIX = "CONNECTOR_RABBITMQ_";
 
     /**
-     * Environment variable prefix for Kafka connections.
-     */
-    public static final @NotNull String KAFKA_PREFIX = "CONNECTOR_KAFKA_";
-
-    /**
      * Returns the environment variable prefix for the given connection type.
      *
      * @param connectionType the connection type
@@ -56,7 +50,6 @@ public final class EnvUtils {
             case REDIS -> REDIS_PREFIX;
             case DATABASE -> MYSQL_PREFIX;
             case RABBITMQ -> RABBITMQ_PREFIX;
-            case KAFKA -> KAFKA_PREFIX;
         };
     }
 
@@ -72,17 +65,12 @@ public final class EnvUtils {
         return RABBITMQ_PREFIX + id.toUpperCase() + "_";
     }
 
-    private static @NotNull String getKafkaConnectionPrefix(final @NotNull String id) {
-        return KAFKA_PREFIX + id.toUpperCase() + "_";
-    }
-
     private static @NotNull String getConnectionPrefix(final @NotNull ConnectionType connectionType,
                                                        final @NotNull String id) {
         return switch (connectionType) {
             case REDIS -> getRedisConnectionPrefix(id);
             case DATABASE -> getDatabaseConnectionPrefix(id);
             case RABBITMQ -> getRabbitMQConnectionPrefix(id);
-            case KAFKA -> getKafkaConnectionPrefix(id);
         };
     }
 

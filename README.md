@@ -1,6 +1,6 @@
 # Connector
 
-Centralize connections to **databases**, **Redis**, **RabbitMQ**, and **Kafka** in your Minecraft server or proxy, and access them through a simple API.
+Centralize connections to **databases**, **Redis**, and **RabbitMQ** in your Minecraft server or proxy, and access them through a simple API.
 
 Connector is a multi-platform library for [PaperMC](https://papermc.io/) servers and [Velocity](https://velocitypowered.com/) proxies. It discovers connections from environment variables, loads configuration files, and registers services that other plugins can consume.
 
@@ -24,13 +24,13 @@ repositories {
 
 dependencies {
     // For Paper plugins
-    implementation("fr.codinbox.connector:paper:7.0.1")
+    implementation("fr.codinbox.connector:paper:8.0.0")
 
     // For Velocity plugins
-    implementation("fr.codinbox.connector:velocity:7.0.1")
+    implementation("fr.codinbox.connector:velocity:8.0.0")
 
     // Commons only (interfaces + implementations, no platform code)
-    implementation("fr.codinbox.connector:commons:7.0.1")
+    implementation("fr.codinbox.connector:commons:8.0.0")
 }
 ```
 
@@ -52,14 +52,14 @@ dependencies {
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>paper</artifactId>
-        <version>7.0.1</version>
+        <version>8.0.0</version>
     </dependency>
 
     <!-- For Velocity plugins -->
     <dependency>
         <groupId>fr.codinbox.connector</groupId>
         <artifactId>velocity</artifactId>
-        <version>7.0.1</version>
+        <version>8.0.0</version>
     </dependency>
 </dependencies>
 ```
@@ -153,28 +153,6 @@ channelPoolSize=5
 | `ssl` | `false` | Enable SSL with default JVM SSLContext |
 | `channelPoolSize` | `5` | Fixed channel pool size |
 
-### Kafka
-
-Uses the [Apache Kafka Clients](https://kafka.apache.org/documentation/) library. The connection exposes the loaded properties and provides factory methods for creating producers, consumers, and admin clients.
-
-**Environment variables:**
-- `CONNECTOR_KAFKA_<NAME>_CONFIG` — path to a `.properties` file (must contain `bootstrap.servers`)
-- `CONNECTOR_KAFKA_<NAME>_EXIT_ON_FAILURE` — `true` or `false` (default: `true`)
-
-**Example `kafka.properties`:**
-```properties
-bootstrap.servers=127.0.0.1:9092
-client.id=my-server
-shutdownTimeoutMs=30000
-```
-
-**Notes:**
-- `bootstrap.servers` is **required** — initialization fails without it.
-- `shutdownTimeoutMs` (default: `30000`) controls the graceful shutdown timeout for tracked clients. This property is consumed by Connector and not passed to Kafka clients.
-- All created producers, consumers, and admin clients are tracked and closed gracefully on shutdown.
-
----
-
 ## Usage
 
 ### Paper
@@ -196,7 +174,6 @@ redis.getConnection("MAIN").ifPresent(conn -> {
 import fr.codinbox.connector.commons.redis.RedisConnectorService;
 import fr.codinbox.connector.commons.database.DatabaseConnectorService;
 import fr.codinbox.connector.commons.rabbitmq.RabbitMQConnectorService;
-import fr.codinbox.connector.commons.kafka.KafkaConnectorService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class MyPlugin extends JavaPlugin {
@@ -230,12 +207,6 @@ public class MyPlugin extends JavaPlugin {
             }
         });
 
-        // Kafka
-        var kafkaService = getServer().getServicesManager().load(KafkaConnectorService.class);
-        kafkaService.getConnection("EVENTS").ifPresent(conn -> {
-            var producer = conn.createProducer();
-            // Use producer... it will be closed on shutdown
-        });
     }
 }
 ```
@@ -262,7 +233,6 @@ import fr.codinbox.connector.velocity.Connector;
 import fr.codinbox.connector.commons.redis.RedisConnectorService;
 import fr.codinbox.connector.commons.database.DatabaseConnectorService;
 import fr.codinbox.connector.commons.rabbitmq.RabbitMQConnectorService;
-import fr.codinbox.connector.commons.kafka.KafkaConnectorService;
 
 public class MyVelocityPlugin {
 
@@ -294,12 +264,6 @@ public class MyVelocityPlugin {
             }
         });
 
-        // Kafka
-        KafkaConnectorService kafka = Connector.getKafkaService();
-        kafka.getConnection("EVENTS").ifPresent(conn -> {
-            var producer = conn.createProducer();
-            // Use producer... it will be closed on shutdown
-        });
     }
 }
 ```
@@ -313,8 +277,8 @@ public class MyVelocityPlugin {
 **Breaking changes in 7.0.0:**
 
 - **Java 21 required** — Connector 7.0.0 requires Java 21. Update your build toolchain and server runtime.
-- **Shadow relocations** — All dependencies (Redisson, HikariCP, MariaDB, RabbitMQ, Kafka, Jackson) are now relocated under `fr.codinbox.connector.libs.*` in the platform JARs. Downstream plugins using the shadow JAR will see relocated types.
-- **New `ConnectionType` values** — The `ConnectionType` enum now includes `RABBITMQ` and `KAFKA` in addition to `REDIS` and `DATABASE`.
+- **Shadow relocations** — All dependencies (Redisson, HikariCP, MariaDB, RabbitMQ, Jackson) are now relocated under `fr.codinbox.connector.libs.*` in the platform JARs. Downstream plugins using the shadow JAR will see relocated types.
+- **New `ConnectionType` values** — The `ConnectionType` enum now includes `RABBITMQ` in addition to `REDIS` and `DATABASE`.
 - **Bug fix** — `DatabaseConnectorServiceImpl` previously threw `RedisConnectionException` on failure; it now correctly throws `ConnectionInitException`.
 - **Project renamed** — The root project is now named `Connector` (was `RedisConnector`).
 

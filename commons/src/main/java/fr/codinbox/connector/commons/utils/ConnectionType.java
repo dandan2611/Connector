@@ -24,9 +24,4 @@ public enum ConnectionType {
      * RabbitMQ connection type, backed by the RabbitMQ AMQP client.
      */
     RABBITMQ,
-
-    /**
-     * Kafka connection type, backed by the Apache Kafka clients library.
-     */
-    KAFKA,
 }
